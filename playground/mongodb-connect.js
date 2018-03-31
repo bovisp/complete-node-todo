@@ -17,7 +17,7 @@ MongoClient.connect(
 		
 		db.collection('todos').insertOne(
 			{
-				text: 'My second todo',
+				text: 'My sixth todo',
 				completed: false
 			},
 			(err, result) => {
