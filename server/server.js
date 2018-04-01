@@ -23,7 +23,7 @@ app.post("/todos", (req, res) => {
 		.then((doc) => {
 			res.send(doc);
 		}, (e) => {
-			console.log("could not save the todo.");
+			res.status(400).send("Could not save todo.", e);
 		});
 });
 
