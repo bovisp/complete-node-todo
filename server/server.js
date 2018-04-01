@@ -5,27 +5,51 @@ mongoose.connect("mongodb://todouser:DebriS979@ds229609.mlab.com:29609/complete-
 
 const Todo = mongoose.model("Todo", {
 	text: {
-		type: String
+		type: String,
+		required: true,
+		minlength: 1,
+		trim: true
 	},
 	completed: {
-		type: Boolean
+		type: Boolean,
+		default: false
 	},
 	completedAt: {
-		type: Number
+		type: Number,
+		default: null
 	}	
 });
 
-let todo = new Todo({
-	text: "Give daughters baths",
-	completed: false,
-	completedAt: 127298727823753475
+const User = mongoose.model("User", {
+	email: {
+		type: String,
+		required: true,
+		menlength: 1,
+		trim: true
+	}
+})
+
+let user = new User({
+	email: '  paul.bovis@me.com    '
 });
 
-todo.save()
+user.save()
 	.then((doc) => {
-		console.log("Saved todo", doc);
+		console.log("Saved user", doc);
 	},
 	(e) => {
 		console.log("Unable to save todo", e);
 	});
+
+// let todo = new Todo({
+//	text: '  Make a new MongoDB schema     '
+// });
+
+//todo.save()
+//	.then((doc) => {
+//		console.log("Saved todo", doc);
+//	},
+//	(e) => {
+//		console.log("Unable to save todo", e);
+//	});
 
