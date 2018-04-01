@@ -1,55 +1,28 @@
-const mongoose = require("mongoose");
+const express    = require("express"),
+	  bodyParser = require("body-parser");
 
-mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://todouser:DebriS979@ds229609.mlab.com:29609/complete-node-todo");
+const { mongoose } = require('./db/mongoose'),
+	  { User }	   = require('./models/User'),
+	  { Todo }	   = require('./models/Todo');
+	  
+let app = express();
 
-const Todo = mongoose.model("Todo", {
-	text: {
-		type: String,
-		required: true,
-		minlength: 1,
-		trim: true
-	},
-	completed: {
-		type: Boolean,
-		default: false
-	},
-	completedAt: {
-		type: Number,
-		default: null
-	}	
-});
+app.use(bodyParser.json());
+app.set("port", process.env.PORT || 8080);
 
-const User = mongoose.model("User", {
-	email: {
-		type: String,
-		required: true,
-		menlength: 1,
-		trim: true
-	}
-})
-
-let user = new User({
-	email: '  paul.bovis@me.com    '
-});
-
-user.save()
-	.then((doc) => {
-		console.log("Saved user", doc);
-	},
-	(e) => {
-		console.log("Unable to save todo", e);
+app.post("/todos", (req, res) => {
+	let todo = new Todo({
+		text: req.body.text
 	});
+	
+	todo.save()
+		.then((doc) => {
+			res.send(doc);
+		}, (e) => {
+			console.log("could not save the todo.");
+		});
+});
 
-// let todo = new Todo({
-//	text: '  Make a new MongoDB schema     '
-// });
-
-//todo.save()
-//	.then((doc) => {
-//		console.log("Saved todo", doc);
-//	},
-//	(e) => {
-//		console.log("Unable to save todo", e);
-//	});
-
+app.listen(app.get('port'), process.env.IP, () => {
+  console.log(`Listening on port ${app.get('port')}`);
+});
