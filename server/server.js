@@ -10,8 +10,8 @@ let app = express();
 app.use(bodyParser.json());
 app.set("port", process.env.PORT || 8080);
 
-app.get("/todos", (req, res) => {
-	res.dend("Hello");
+app.get("/", (req, res) => {
+	res.send("Hello");
 });
 
 app.post("/todos", (req, res) => {
