@@ -15,8 +15,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/todos", (req, res) => {
-	res.send(req.body);
-	/* let todo = new Todo({
+	let todo = new Todo({
 		text: req.body.text
 	});
 	
@@ -25,7 +24,7 @@ app.post("/todos", (req, res) => {
 			res.send(doc);
 		}, (e) => {
 			res.status(400).send("Could not save todo.", e);
-		}); */
+		});
 });
 
 app.listen(app.get('port'), process.env.IP, () => {
