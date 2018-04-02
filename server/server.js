@@ -10,6 +10,15 @@ let app = express();
 app.use(bodyParser.json());
 app.set("port", process.env.PORT || 8080);
 
+app.get("/todos", (req, res) => {
+	Todo.find()
+		.then((todos) => {
+			res.send({ todos });
+		},(e) => {
+			res.status(400).send("could not fetch todos");
+		});
+});
+
 app.post("/todos", (req, res) => {
 	let todo = new Todo({
 		text: req.body.text
