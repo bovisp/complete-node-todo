@@ -54,7 +54,7 @@ app.get("/todos/:id", (req, res) => {
 	});
 });
 
-app.listen(app.get('port'), process.env.IP, () => {
+app.listen(app.get('port'), () => {
   console.log(`Listening on port ${app.get('port')}`);
 });
 
