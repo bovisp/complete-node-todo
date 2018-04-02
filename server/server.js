@@ -14,7 +14,7 @@ app.set("port", process.env.PORT || 8080);
 app.get("/todos", (req, res) => {
 	Todo.find()
 		.then((todos) => {
-			if (users.length === 0) {
+			if (todos.length === 0) {
 				return console.log("No todos found");
 			}
 
