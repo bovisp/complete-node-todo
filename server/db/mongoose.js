@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
+require("dotenv").config();
+
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://todouser:DebriS979@ds229609.mlab.com:29609/complete-node-todo");
+mongoose.connect(process.env.PROD_MONGODB_URL);
 
 module.exports = { mongoose };
