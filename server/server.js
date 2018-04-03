@@ -4,7 +4,6 @@ require("dotenv").config();
 
 if (env === 'development') {
 	process.env.PORT = 3000;
-	console.log(process.env.DEV_MONGODB_URL);
 	process.env.MONGODB_URL = process.env.DEV_MONGODB_URL
 } else if (env === 'test') {
 	process.env.PORT = 3000;
