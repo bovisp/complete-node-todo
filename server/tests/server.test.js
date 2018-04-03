@@ -8,11 +8,11 @@ let { app }  = require("./../server"),
 const todos = [
 	{
 		_id: new ObjectID(),
-		text: "First test todo"
+		text: "This is a test todo test 1"
 	},
 	{
 		_id: new ObjectID(),
-		text: "Second test todo",
+		text: "This is a test todo test 2",
 		completed: true,
 		completedAt: 333
 	}
