@@ -1,3 +1,13 @@
+let env = process.env.NODE_ENV || 'development';
+
+if (env === 'development') {
+	process.env.PORT = 3000;
+	process.env.MONGODB_URL = process.env.DEV_MONGODB_URL
+} else if (env === 'test') {
+	process.env.PORT = 3000;
+	process.env.MONGODB_URL = process.env.TEST_MONGODB_URL
+}
+
 const express      = require("express"),
 	  { ObjectID } = require("mongodb"),
 	  bodyParser   = require("body-parser"),
@@ -10,7 +20,6 @@ const { mongoose } = require('./db/mongoose'),
 let app = express();
 
 app.use(bodyParser.json());
-app.set("port", process.env.PORT || 8080);
 
 app.get("/todos", (req, res) => {
 	Todo.find()
@@ -111,7 +120,7 @@ app.delete("/todos/:id", (req, res) => {
 		});
 });
 
-app.listen(app.get('port'), () => {
+app.listen(process.env.PORT, () => {
   console.log(`Listening on port ${app.get('port')}`);
 });
 
