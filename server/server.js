@@ -121,7 +121,7 @@ app.delete("/todos/:id", (req, res) => {
 });
 
 app.listen(process.env.PORT, () => {
-  console.log(`Listening on port ${app.get('port')}`);
+  console.log(`Listening on port ${process.env.PORT}`);
 });
 
 module.exports = { app };
