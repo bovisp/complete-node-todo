@@ -61,8 +61,6 @@ app.get("/todos/:id", (req, res) => {
 app.patch("/todos/:id", (req, res) => {
 	let body = _.pick(req.body, ['text', 'completed']);
 
-	console.log(body);
-
 	if (!ObjectID.isValid(req.params.id)) {
 		return res.status(404).send();
 	}
