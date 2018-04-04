@@ -5,9 +5,10 @@ const express      = require("express"),
 	  bodyParser   = require("body-parser"),
 	  _            = require("lodash");
 
-const { mongoose } = require('./db/mongoose'),
-	  { User }	   = require('./models/User'),
-	  { Todo }	   = require('./models/Todo');
+const { mongoose }     = require('./db/mongoose'),
+	  { User }	       = require('./models/User'),
+	  { Todo }	       = require('./models/Todo'),
+	  { authenticate } = require('./middleware/authenticate');
 	  
 let app = express();
 
@@ -110,6 +111,10 @@ app.delete("/todos/:id", (req, res) => {
 		.catch((e) => {
 			res.status(400).send();
 		});
+});
+
+app.get("/users/me", authenticate, (req, res) => {
+	res.send(req.user);
 });
 
 app.post("/users", (req, res) => {
