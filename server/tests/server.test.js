@@ -244,7 +244,7 @@ describe("POST /todos", () => {
 				.end(done);
 		});
 
-		it ("should not ceate user if emailin use", (done) => {
+		it ("should not create user if email in use", (done) => {
 			request(app)
 				.post("/users")
 				.send({
