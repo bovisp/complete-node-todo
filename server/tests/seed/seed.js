@@ -4,19 +4,6 @@ const { ObjectID } = require("mongodb"),
 let { Todo } = require("./../../models/Todo"),
 	{ User } = require("./../../models/User");
 
-const todos = [
-	{
-		_id: new ObjectID(),
-		text: "This is a test todo test 1"
-	},
-	{
-		_id: new ObjectID(),
-		text: "This is a test todo test 2",
-		completed: true,
-		completedAt: 333
-	}
-];
-
 const userOneId = new ObjectID();
 const userTwoId = new ObjectID();
 
@@ -35,7 +22,28 @@ const users = [
 	{
 		_id: userTwoId,
 		email: "nora@example.com",
-		password: "userTwoPass"
+		password: "userTwoPass",
+		tokens: [
+			{
+				access: "auth",
+				token: jwt.sign({ _id: userTwoId, access: "auth" }, "abc123").toString()
+			}
+		]
+	}
+];
+
+const todos = [
+	{
+		_id: new ObjectID(),
+		text: "This is a test todo test 1",
+		_creator: userOneId
+	},
+	{
+		_id: new ObjectID(),
+		text: "This is a test todo test 2",
+		completed: true,
+		completedAt: 333,
+		_creator: userTwoId
 	}
 ];
 
