@@ -203,6 +203,19 @@ describe("POST /todos", () => {
 				})
 				.end(done);
 		});
+		
+		it ("should update the todo that does not belong to it", (done) => {
+			let hexId = todos[0]._id.toHexString();
+
+			let text = "This is my updated todo from a test";
+
+			request(app)
+				.patch(`/todos/${hexId}`)
+				.set("x-auth", users[1].tokens[0].token)
+				.send({ text, completed: true })
+				.expect(404)
+				.end(done);
+		});
 
 		it ("should clear completedAt when todo is not completed", (done) => {
 			let hexId = todos[1]._id.toHexString();
