@@ -22,22 +22,21 @@ describe("POST /todos", () => {
 			.expect((res) => {
 				expect(res.body.text).toBe(text);
 			})
-			.end((err, res) => {
+			.end(async (err, res) => {
 				if (err) {
 					return done(err);
 				}
+				
+				try {
+					const todos = await Todo.find({text});
+					
+					expect(todos.length).toBe(1);
+					expect(todos[0].text).toBe(text);
 
-				Todo.find({text})
-					.then((todos) => {
-						expect(todos.length).toBe(1);
-
-						expect(todos[0].text).toBe(text);
-
-						done();
-					})
-					.catch((e) => {
-						done();
-					});
+					done();
+				} catch(e) {
+					done(e);
+				}
 			});
 	});
 
@@ -49,20 +48,20 @@ describe("POST /todos", () => {
 			.set("x-auth", users[0].tokens[0].token)
 			.send({ text })
 			.expect(400)
-			.end((err, res) => {
+			.end(async (err, res) => {
 				if (err) {
 					return done(err);
 				}
+				
+				try {
+					const todos = await Todo.find();
+					
+					expect(todos.length).toBe(2);
 
-				Todo.find()
-					.then((todos) => {
-						expect(todos.length).toBe(2);
-
-						done();
-					})
-					.catch((e) => {
-						done();
-					});
+					done();	
+				} catch(e) {
+					done(e);
+				}
 			});
 	});
 
@@ -127,21 +126,21 @@ describe("POST /todos", () => {
 				.expect((res) => {
 					expect(res.body.todo._id).toBe(hexId);
 				})
-				.end((err, res) => {
+				.end(async (err, res) => {
 					if (err) {
 						return done(err);
 					}
+					
+					try {
+						const todo = await Todo.findById(hexId);
+						
+						expect(todo).toBeFalsy();
 
-					Todo.findById(hexId)
-						.then((todo) => {
-							expect(todo).toBeFalsy();
-
-							done();
-						})
-						.catch((e) => {
-							done();
-						});
-				})
+						done();
+					} catch(e) {
+						done(e);
+					}
+				});
 		});
 
 		it ("should not remove a todo that does not belong to it", (done) => {
@@ -151,21 +150,21 @@ describe("POST /todos", () => {
 				.delete(`/todos/${hexId}`)
 				.set("x-auth", users[0].tokens[0].token)
 				.expect(404)
-				.end((err, res) => {
+				.end(async (err, res) => {
 					if (err) {
 						return done(err);
 					}
+					
+					try {
+						const todo = await Todo.findById(hexId);
+						
+						expect(todo).toBeTruthy();
 
-					Todo.findById(hexId)
-						.then((todo) => {
-							expect(todo).toBeTruthy();
-
-							done();
-						})
-						.catch((e) => {
-							done();
-						});
-				})
+						done();
+					} catch(e) {
+						done(e);
+					}
+				});
 		});
 
 		it ("should return 404 if todo not found", (done) => {
@@ -274,19 +273,21 @@ describe("POST /todos", () => {
 					expect(res.body._id).toBeTruthy();
 					expect(res.body.email).toBe(email);
 				})
-				.end((err) => {
+				.end(async (err) => {
 					if (err) {
 						return done();
 					}
 
-					User.findOne({email})
-						.then((user) => {
-							expect(user).toBeTruthy();
-							expect(user.password).not.toBe(password);
+					try {
+						const user = await User.findOne({email});
+						
+						expect(user).toBeTruthy();
+						expect(user.password).not.toBe(password);
 
-							done();
-						})
-						.catch((e) => done(e));
+						done();	
+					} catch(e) {
+						done(e);	
+					}
 				});
 		});
 
@@ -325,21 +326,23 @@ describe("POST /todos", () => {
 				.expect((res) => {
 					expect(res.headers['x-auth']).toBeTruthy();
 				})
-				.end((err, res) => {
+				.end(async (err, res) => {
 					if (err) {
 						done(err);
 					}
 					
-					User.findById(users[1]._id)
-						.then((user) => {
-							expect(user.toObject().tokens[1]).toMatchObject({
-								access: 'auth',
-								token: res.headers['x-auth']
-							});
-							
-							done();
-						})
-						.catch((e) => done(e));
+					try {
+						const user = await User.findById(users[1]._id);
+						
+						expect(user.toObject().tokens[1]).toMatchObject({
+							access: 'auth',
+							token: res.headers['x-auth']
+						});
+						
+						done();
+					} catch(e) {
+						done(e);
+					}
 				});
 		});
 		
@@ -354,18 +357,20 @@ describe("POST /todos", () => {
 				.expect((res) => {
 					expect(res.headers['x-auth']).toBeFalsy();
 				})
-				.end((err, res) => {
+				.end(async (err, res) => {
 					if (err) {
 						done(err);
 					}
 					
-					User.findById(users[1]._id)
-						.then((user) => {
-							expect(user.tokens.length).toBe(1);
+					try {
+						const user = await User.findById(users[1]._id);
+						
+						expect(user.tokens.length).toBe(1);
 							
-							done();
-						})
-						.catch((e) => done(e));
+						done();
+					} catch(e) {
+						done(e);
+					}
 				});
 		});
 	});
@@ -376,18 +381,20 @@ describe("POST /todos", () => {
 				.delete("/users/me/token")
 				.set("x-auth", users[0].tokens[0].token)
 				.expect(200)
-				.end((err, res) => {
+				.end(async (err, res) => {
 					if (err) {
 						done(err);
 					}
 					
-					User.findById(users[0]._id)
-						.then((user) => {
-							expect(user.tokens.length).toBe(0);
+					try {
+						const user = await User.findById(users[0]._id);
+						
+						expect(user.tokens.length).toBe(0);
 							
-							done();
-						})
-						.catch((e) => done(e));
+						done();
+					} catch(e) {
+						done(e);
+					}
 				});
 		});
 	});
